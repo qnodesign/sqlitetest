@@ -25,7 +25,7 @@ example.controller("ExampleController", function($scope, $cordovaSQLite) {
         $cordovaSQLite.execute(db, query, [firstname, lastname]).then(function(res) {
             $scope.console = "INSERT ID -> " + res.insertId;
         }, function (err) {
-            alert(err);
+            $scope.console = err;
         });
     }
  
@@ -39,7 +39,7 @@ example.controller("ExampleController", function($scope, $cordovaSQLite) {
                 $scope.console = "No results found";
             }
         }, function (err) {
-            alert(err);
+            $scope.console = err;
         });
     }
  
