@@ -1,19 +1,46 @@
-// Ionic Starter App
+var db = null;
+ 
+var example = angular.module('starter', ['ionic', 'ngCordova'])
+    .run(function($ionicPlatform, $cordovaSQLite) {
+        $ionicPlatform.ready(function() {
+            if(window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+            }
+            if(window.StatusBar) {
+                StatusBar.styleDefault();
+            }
+            db = $cordovaSQLite.openDB("my.db");
+            console.log(db);
+            $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, firstname text, lastname text)");
+        });
+    });
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+example.controller("ExampleController", function($scope, $cordovaSQLite) {
+ 
+    $scope.insert = function(firstname, lastname) {
+      $scope.console = "insert clicked";
+        var query = "INSERT INTO people (firstname, lastname) VALUES (?,?)";
+        $scope.console = firstname+" "+lastname;
+        $cordovaSQLite.execute(db, query, [firstname, lastname]).then(function(res) {
+            $scope.console = "INSERT ID -> " + res.insertId;
+        }, function (err) {
+            alert(err);
+        });
     }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
+ 
+    $scope.select = function(lastname) {
+        $scope.console = "select clicked";
+        var query = "SELECT firstname, lastname FROM people WHERE lastname = ?";
+        $cordovaSQLite.execute(db, query, [lastname]).then(function(res) {
+            if(res.rows.length > 0) {
+                $scope.console = "SELECTED -> " + res.rows.item(0).firstname + " " + res.rows.item(0).lastname;
+            } else {
+                $scope.console = "No results found";
+            }
+        }, function (err) {
+            alert(err);
+        });
     }
-  });
-})
+ 
+});

@@ -14,10 +14,13 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-
+    <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>
+    
     <!-- cordova script (this will be a 404 during development) -->
+    <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
+    <script src="js/vendor/ng-cordova.min.js"></script>
     <script src="cordova.js"></script>
-
+    
     <!-- your app's js -->
     <script src="js/app.js"></script>
   </head>
@@ -27,7 +30,15 @@
       <ion-header-bar class="bar-stable">
         <h1 class="title">Ionic Blank Starter</h1>
       </ion-header-bar>
-      <ion-content>
+      <ion-content ng-controller="ExampleController">
+        <label>firstname</label><input ng-model="fna" type="text" style="border: 1px solid black">
+        <label>lastname</label><input ng-model="lna" type="text" style="border: 1px solid black">
+        <button ng-click="insert(fna,lna)">insert</button>
+
+        <label>lastname</label><input ng-model="lna2" type="text" style="border: 1px solid black">
+        <button ng-click="select(lna2)">select</button>
+
+        <h3>result: {{console}}</h3>
       </ion-content>
     </ion-pane>
   </body>
